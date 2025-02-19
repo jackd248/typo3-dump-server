@@ -30,6 +30,8 @@ Download the zip file from [TYPO3 extension repository (TER)](https://extensions
 
 ## Usage
 
+![Screencast](./Documentation/Images/screencast.gif)
+
 ### Console command
 
 Start the dump server with the following command:
@@ -37,6 +39,9 @@ Start the dump server with the following command:
 ```bash
 vendor/bin/typo3 dump:server
 ```
+
+![Console Command](./Documentation/Images/screenshot-command.png)
+
 
 Use the format option to change the output format to `html`:
 
@@ -53,6 +58,14 @@ Use the `dump` function in your code:
 
 ```php
 dump($variable);
+```
+
+## Development
+
+Use the following ddev command to easily install all supported TYPO3 versions for locale development.
+
+```bash
+$ ddev install all
 ```
 
 ## Credits
