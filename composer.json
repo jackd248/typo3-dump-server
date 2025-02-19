@@ -1,5 +1,5 @@
 {
-	"name": "kmi/typo3-dump-server",
+	"name": "konradmichalik/typo3-dump-server",
 	"description": "This extension brings the Symfony Var Dump Server to TYPO3.",
 	"type": "typo3-cms-extension",
 	"authors": [
