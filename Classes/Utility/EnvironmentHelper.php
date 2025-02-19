@@ -6,7 +6,7 @@ namespace KonradMichalik\Typo3DumpServer\Utility;
 
 final class EnvironmentHelper
 {
-    private const string DEFAULT_HOST = 'tcp://127.0.0.1:9912';
+    private const DEFAULT_HOST = 'tcp://127.0.0.1:9912';
 
     public static function getHost(): string
     {
