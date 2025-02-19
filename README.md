@@ -12,6 +12,9 @@ This extension brings the [Symfony Var Dump Server](https://symfony.com/doc/curr
 
 This package provides a dump server that gathers all `dump` call outputs, preventing interference with HTTP or API responses.
 
+![Console Command](./Documentation/Images/screenshot.png)
+
+
 ## Requirements
 
 * TYPO3 >= 11.5 & PHP 8.1+
@@ -42,7 +45,6 @@ vendor/bin/typo3 dump:server
 
 ![Console Command](./Documentation/Images/screenshot-command.png)
 
-
 Use the format option to change the output format to `html`:
 
 ```bash
@@ -50,7 +52,7 @@ vendor/bin/typo3 dump:server --format=html > dump.html
 ```
 
 > [!NOTE]  
-> The dump server will be available at `tcp://127.0.0.1:9912` by default.  
+> The dump server will be available at `tcp://127.0.0.1:9912` by default. Use the environment variable `TYPO3_DUMP_SERVER_HOST` to change the host.
 
 ### Dump
 
@@ -70,7 +72,7 @@ $ ddev install all
 
 ## Credits
 
-This project is highly inspired by the [laravel-dump-server](https://github.com/beyondcode/laravel-dump-server) the symfony [var-dumper](https://github.com/symfony/var-dumper) component itself.
+This project is highly inspired by the [laravel-dump-server](https://github.com/beyondcode/laravel-dump-server) & the symfony [var-dumper](https://github.com/symfony/var-dumper) component itself.
 
 ## License
 
