@@ -40,7 +40,7 @@ Download the zip file from [TYPO3 extension repository (TER)](https://extensions
 Start the dump server with the following command:
 
 ```bash
-vendor/bin/typo3 dump:server
+vendor/bin/typo3 server:dump
 ```
 
 ![Console Command](./Documentation/Images/screenshot-command.png)
@@ -48,7 +48,7 @@ vendor/bin/typo3 dump:server
 Use the format option to change the output format to `html`:
 
 ```bash
-vendor/bin/typo3 dump:server --format=html > dump.html
+vendor/bin/typo3 server:dump --format=html > dump.html
 ```
 
 > [!NOTE]  

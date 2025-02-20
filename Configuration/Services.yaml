@@ -11,5 +11,5 @@ services:
     KonradMichalik\Typo3DumpServer\Command\DumpServerCommand:
         tags:
             -   name: console.command
-                command: 'dump:server'
+                command: 'server:dump'
                 description: 'Start a Symfony Var Dump server that collects and displays `dump` outputs in a single place for debugging your application.'
