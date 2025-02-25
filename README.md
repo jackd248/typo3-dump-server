@@ -62,6 +62,16 @@ Use the `dump` function in your code:
 dump($variable);
 ```
 
+### ViewHelper
+
+Use the `symfony:dump` ViewHelper in your Fluid templates:
+
+```html
+<html xmlns:symfony="http://typo3.org/ns/KonradMichalik/Typo3DumpServer/ViewHelpers">
+
+<symfony:dump>{variable}</symfony:dump>
+```
+
 ## Development
 
 Use the following ddev command to easily install all supported TYPO3 versions for locale development.
