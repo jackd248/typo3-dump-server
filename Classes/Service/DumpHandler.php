@@ -18,8 +18,8 @@ final class DumpHandler
     private const SERVER_CONNECTION_TIMEOUT = 0.5;
 
     /**
-     * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
-     */
+    * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
+    */
     public static function register(): void
     {
         $cloner = new VarCloner();
