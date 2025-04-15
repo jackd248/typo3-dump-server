@@ -15,20 +15,54 @@ use Symfony\Component\VarDumper\VarDumper;
 
 final class DumpHandler
 {
+    private const SERVER_CONNECTION_TIMEOUT = 0.5;
+
     /**
     * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
     */
     public static function register(): void
     {
         $cloner = new VarCloner();
-        $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
-        $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
-            'cli' => new CliContextProvider(),
-            'source' => new SourceContextProvider(),
-        ]);
+        $serverAvailable = self::isServerAvailable(EnvironmentHelper::getHost());
+        $suppressDumpIfServerIsUnavailable = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] ?? false;
 
-        VarDumper::setHandler(function (mixed $var) use ($cloner, $dumper): ?string {
-            return $dumper->dump($cloner->cloneVar($var));
-        });
+        if ($serverAvailable) {
+            $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
+            $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
+                'cli' => new CliContextProvider(),
+                'source' => new SourceContextProvider(),
+            ]);
+
+            VarDumper::setHandler(static function (mixed $var) use ($cloner, $dumper): ?string {
+                return $dumper->dump($cloner->cloneVar($var));
+            });
+        } elseif ($suppressDumpIfServerIsUnavailable) {
+            VarDumper::setHandler(function (): void {
+            });
+        }
+    }
+
+    private static function isServerAvailable(string $host): bool
+    {
+        $urlParts = parse_url($host);
+
+        if (empty($urlParts['host']) || empty($urlParts['port'])) {
+            return false;
+        }
+
+        $connection = @fsockopen(
+            $urlParts['host'],
+            (int)$urlParts['port'],
+            $errno,
+            $errstr,
+            self::SERVER_CONNECTION_TIMEOUT
+        );
+
+        if ($connection) {
+            fclose($connection);
+            return true;
+        }
+
+        return false;
     }
 }
