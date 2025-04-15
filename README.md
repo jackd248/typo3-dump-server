@@ -72,6 +72,16 @@ Use the `symfony:dump` ViewHelper in your Fluid templates:
 <symfony:dump>{variable}</symfony:dump>
 ```
 
+### Extension settings
+
+By default, a `dump()` call will add something like the following output to the frontend if the dump server isn't running:
+
+![Dump output in frontend](./Documentation/Images/output.jpg)
+
+You can suppress this output with the `suppressDump` setting in the extension configuration. If this setting is enabled, the output will be suppressed and the dump will only be sent to the dump server.
+
+You can find the extension settings in the TYPO3 backend under `Admin Tools > Settings > Extension Configuration > typo3_dump_server`.
+
 ## Development
 
 Use the following ddev command to easily install all supported TYPO3 versions for locale development.

@@ -1,2 +1,2 @@
-# cat=basic/enable; type=boolean; label=Suppress symfony dump rendering in frontend, if server is not running
-suppressDump = 1
+# cat=basic/enable; type=boolean; label=Suppress symfony dump output rendering in the frontend, if the dump server is not running
+suppressDump = 0
