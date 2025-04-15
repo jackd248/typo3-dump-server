@@ -15,9 +15,11 @@ use Symfony\Component\VarDumper\VarDumper;
 
 final class DumpHandler
 {
+    private const SERVER_CONNECTION_TIMEOUT = 0.5;
+
     /**
-    * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
-    */
+     * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
+     */
     public static function register(): void
     {
         $cloner = new VarCloner();
@@ -35,7 +37,8 @@ final class DumpHandler
                 return $dumper->dump($cloner->cloneVar($var));
             });
         } elseif ($suppressDumpIfServerIsUnavailable) {
-            VarDumper::setHandler(function (): void {});
+            VarDumper::setHandler(function (): void {
+            });
         }
     }
 
@@ -47,7 +50,13 @@ final class DumpHandler
             return false;
         }
 
-        $connection = @fsockopen($urlParts['host'], (int)$urlParts['port'], $errno, $errstr, 0.5);
+        $connection = @fsockopen(
+            $urlParts['host'],
+            (int)$urlParts['port'],
+            $errno,
+            $errstr,
+            self::SERVER_CONNECTION_TIMEOUT
+        );
 
         if ($connection) {
             fclose($connection);
