@@ -4,9 +4,11 @@
 
 # TYPO3 extension `typo3_dump_server`
 
-</div>
+[![Latest Stable Version](https://typo3-badges.dev/badge/typo3_dump_server/version/shields.svg)](https://extensions.typo3.org/extension/typo3_dump_server)
+[![Supported TYPO3 versions](https://typo3-badges.dev/badge/typo3_dump_server/typo3/shields.svg)](https://extensions.typo3.org/extension/typo3_dump_server)
+[![License](https://poser.pugx.org/konradmichalik/typo3-dump-server/license)](LICENSE.md)
 
-[![License](https://poser.pugx.org/xima/xima-typo3-content-planner/license)](LICENSE.md)
+</div>
 
 This extension brings the [Symfony Var Dump Server](https://symfony.com/doc/current/components/var_dumper.html#the-dump-server) to TYPO3.
 
@@ -23,11 +25,17 @@ This package provides a dump server that gathers all `dump` call outputs, preven
 
 ### Composer
 
+[![Packagist](https://img.shields.io/packagist/v/konradmichalik/typo3-dump-server?label=version&logo=packagist)](https://packagist.org/packages/konradmichalik/typo3-dump-server)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/konradmichalik/typo3-dump-server?color=brightgreen)](https://packagist.org/packages/konradmichalik/typo3-dump-server)
+
 ```bash
 composer require --dev konradmichalik/typo3-dump-server
 ```
 
 ### TER
+
+[![TER version](https://typo3-badges.dev/badge/typo3_dump_server/version/shields.svg)](https://extensions.typo3.org/extension/typo3_dump_server)
+[![TER downloads](https://typo3-badges.dev/badge/typo3_dump_server/downloads/shields.svg)](https://extensions.typo3.org/extension/typo3_dump_server)
 
 Download the zip file from [TYPO3 extension repository (TER)](https://extensions.typo3.org/extension/typo3_dump_server).
 
