@@ -43,9 +43,12 @@ use Symfony\Component\VarDumper\Server\DumpServer;
 */
 final class DumpServerCommand extends Command
 {
-    /** @var DumpDescriptorInterface[] */
+    /** @var array<string, DumpDescriptorInterface> */
     private array $descriptors;
 
+    /**
+     * @param array<string, DumpDescriptorInterface> $descriptors
+     */
     public function __construct(?string $name = null, array $descriptors = [])
     {
         $this->descriptors = $descriptors + [
@@ -80,6 +83,10 @@ EOF
         $io = new SymfonyStyle($input, $output);
         $format = $input->getOption('format');
 
+        if (!is_string($format)) {
+            throw new InvalidArgumentException('Format option must be a string.', 8369534571);
+        }
+
         $descriptor = $this->descriptors[$format] ?? null;
         if ($descriptor === null) {
             throw new InvalidArgumentException(\sprintf('Unsupported format "%s".', $format), 8369534570);
@@ -101,6 +108,9 @@ EOF
         return Command::SUCCESS;
     }
 
+    /**
+     * @return array<string>
+     */
     private function getAvailableFormats(): array
     {
         return array_keys($this->descriptors);

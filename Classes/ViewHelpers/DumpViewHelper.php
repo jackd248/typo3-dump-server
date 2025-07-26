@@ -45,6 +45,7 @@ class DumpViewHelper extends AbstractViewHelper
 
     public function render(): string
     {
-        return dump($this->renderChildren());
+        $result = dump($this->renderChildren());
+        return is_string($result) ? $result : '';
     }
 }

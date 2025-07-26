@@ -43,7 +43,18 @@ final class DumpHandler
     {
         $cloner = new VarCloner();
         $serverAvailable = self::isServerAvailable(EnvironmentHelper::getHost());
-        $suppressDumpIfServerIsUnavailable = (bool)($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] ?? false);
+        $suppressDumpIfServerIsUnavailable = false;
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']) &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']) &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']) &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'])
+        ) {
+            $suppressDumpIfServerIsUnavailable = (bool)$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'];
+        }
 
         if ($serverAvailable) {
             $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
@@ -64,6 +75,10 @@ final class DumpHandler
     {
         $urlParts = parse_url($host);
 
+        if ($urlParts === false || !isset($urlParts['host'], $urlParts['port'])) {
+            return false;
+        }
+
         if ($urlParts['host'] === '' || $urlParts['port'] === 0) {
             return false;
         }
@@ -76,7 +91,7 @@ final class DumpHandler
             self::SERVER_CONNECTION_TIMEOUT
         );
 
-        if ($connection) {
+        if ($connection !== false) {
             fclose($connection);
             return true;
         }
