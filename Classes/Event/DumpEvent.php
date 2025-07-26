@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ *
+ * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+namespace KonradMichalik\Typo3DumpServer\Event;
+
+/**
+ * PSR-14 Event that is dispatched when a dump is processed.
+ */
+final class DumpEvent
+{
+    private mixed $value;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $context;
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function __construct(mixed $value, array $context = [])
+    {
+        $this->value = $value;
+        $this->context = $context;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+    /**
+     * Get the dumped variable value.
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    /**
+     * Get the type of the dumped variable.
+     */
+    public function getType(): string
+    {
+        return gettype($this->value);
+    }
+}

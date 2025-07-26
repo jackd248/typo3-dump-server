@@ -21,10 +21,20 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use ComposerUnused\ComposerUnused\Configuration\Configuration;
-use ComposerUnused\ComposerUnused\Configuration\NamedFilter;
+namespace Test\Sitepackage\EventListener;
 
-return static function (Configuration $config): Configuration {
-    $config->addNamedFilter(NamedFilter::fromString('typo3/cms-core'));
-    return $config;
-};
+use KonradMichalik\Typo3DumpServer\Event\DumpEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
+#[AsEventListener]
+class DemoListener
+{
+    public function __invoke(DumpEvent $event): void
+    {
+        $value = $event->getValue();
+        $type = $event->getType();
+
+        // DebuggerUtility::var_dump($value, $type);
+    }
+}
