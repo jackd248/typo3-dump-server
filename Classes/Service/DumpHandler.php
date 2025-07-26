@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace KonradMichalik\Typo3DumpServer\Service;
 
+use KonradMichalik\Typo3DumpServer\Event\DumpEvent;
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\ContextProvider\CliContextProvider;
@@ -31,10 +33,13 @@ use Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Symfony\Component\VarDumper\Dumper\ServerDumper;
 use Symfony\Component\VarDumper\VarDumper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class DumpHandler
 {
     private const SERVER_CONNECTION_TIMEOUT = 0.5;
+
+    private static ?EventDispatcherInterface $eventDispatcher = null;
 
     /**
     * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
@@ -64,7 +69,18 @@ final class DumpHandler
             ]);
 
             VarDumper::setHandler(static function (mixed $var) use ($cloner, $dumper): ?string {
-                return $dumper->dump($cloner->cloneVar($var));
+                $data = $cloner->cloneVar($var);
+                $context = [];
+
+                // Dispatch PSR-14 event with original variable
+                $eventDispatcher = self::getEventDispatcher();
+                if ($eventDispatcher !== null) {
+                    $event = new DumpEvent($var, $context);
+                    $eventDispatcher->dispatch($event);
+                }
+
+                // Process the dump
+                return $dumper->dump($data);
             });
         } elseif ($suppressDumpIfServerIsUnavailable) {
             VarDumper::setHandler(function (): void {});
@@ -97,5 +113,23 @@ final class DumpHandler
         }
 
         return false;
+    }
+
+    /**
+     * Get the TYPO3 event dispatcher instance.
+     */
+    private static function getEventDispatcher(): ?EventDispatcherInterface
+    {
+        if (self::$eventDispatcher === null) {
+            try {
+                // Get TYPO3 PSR-14 event dispatcher
+                self::$eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+            } catch (\Throwable $e) {
+                // Event dispatcher not available (e.g., during bootstrap)
+                self::$eventDispatcher = null;
+            }
+        }
+
+        return self::$eventDispatcher;
     }
 }
