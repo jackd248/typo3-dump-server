@@ -33,7 +33,7 @@ class DemoMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $routingParameter = $request->getAttribute('routing');
-        dump($routingParameter);
+        \dump($routingParameter);
         return $handler->handle($request);
     }
 }
