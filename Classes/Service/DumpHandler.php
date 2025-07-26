@@ -2,6 +2,25 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ *
+ * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 namespace KonradMichalik\Typo3DumpServer\Service;
 
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
@@ -24,10 +43,10 @@ final class DumpHandler
     {
         $cloner = new VarCloner();
         $serverAvailable = self::isServerAvailable(EnvironmentHelper::getHost());
-        $suppressDumpIfServerIsUnavailable = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] ?? false;
+        $suppressDumpIfServerIsUnavailable = (bool)($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] ?? false);
 
         if ($serverAvailable) {
-            $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
+            $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
             $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
                 'cli' => new CliContextProvider(),
                 'source' => new SourceContextProvider(),
@@ -37,8 +56,7 @@ final class DumpHandler
                 return $dumper->dump($cloner->cloneVar($var));
             });
         } elseif ($suppressDumpIfServerIsUnavailable) {
-            VarDumper::setHandler(function (): void {
-            });
+            VarDumper::setHandler(function (): void {});
         }
     }
 
@@ -46,13 +64,13 @@ final class DumpHandler
     {
         $urlParts = parse_url($host);
 
-        if (empty($urlParts['host']) || empty($urlParts['port'])) {
+        if ($urlParts['host'] === '' || $urlParts['port'] === 0) {
             return false;
         }
 
         $connection = @fsockopen(
             $urlParts['host'],
-            (int)$urlParts['port'],
+            $urlParts['port'],
             $errno,
             $errstr,
             self::SERVER_CONNECTION_TIMEOUT
