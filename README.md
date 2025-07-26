@@ -71,6 +71,10 @@ Use the `dump` function in your code:
 
 ```php
 dump($variable);
+
+// or
+
+\Symfony\Component\VarDumper::dump($variable);
 ```
 
 ### ViewHelper
