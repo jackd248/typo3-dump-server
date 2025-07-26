@@ -21,7 +21,7 @@ This package provides a dump server that gathers all `dump` call outputs, preven
 
 ## 🔥 Installation
 
-## Requirements
+### Requirements
 
 * TYPO3 >= 11.5
 * PHP 8.1+
@@ -71,6 +71,10 @@ Use the `dump` function in your code:
 
 ```php
 dump($variable);
+
+// or
+
+\Symfony\Component\VarDumper::dump($variable);
 ```
 
 ### ViewHelper
