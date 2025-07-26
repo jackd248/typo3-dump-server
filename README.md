@@ -19,12 +19,12 @@ This package provides a dump server that gathers all `dump` call outputs, preven
 
 ![Console Command](./Documentation/Images/screenshot.png)
 
+## 🔥 Installation
 
 ## Requirements
 
-* TYPO3 >= 11.5 & PHP 8.1+
-
-## Installation
+* TYPO3 >= 11.5
+* PHP 8.1+
 
 ### Composer
 
@@ -42,7 +42,7 @@ composer require --dev konradmichalik/typo3-dump-server
 
 Download the zip file from [TYPO3 extension repository (TER)](https://extensions.typo3.org/extension/typo3_dump_server).
 
-## Usage
+## 📊 Usage
 
 ![Screencast](./Documentation/Images/screencast.gif)
 
@@ -93,19 +93,16 @@ You can suppress this output with the `suppressDump` setting in the extension co
 
 You can find the extension settings in the TYPO3 backend under `Admin Tools > Settings > Extension Configuration > typo3_dump_server`.
 
-## Development
 
-Use the following ddev command to easily install all supported TYPO3 versions for locale development.
+## 🧑‍💻 Contributing
 
-```bash
-$ ddev install all
-```
+Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Credits
+## 💛 Acknowledgements
 
 This project is highly inspired by the [laravel-dump-server](https://github.com/beyondcode/laravel-dump-server) & the symfony [var-dumper](https://github.com/symfony/var-dumper) component itself.
 
-## License
+## ⭐ License
 
 This project is licensed
 under [GNU General Public License 2.0 (or later)](LICENSE.md).
