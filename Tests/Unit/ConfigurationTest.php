@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the TYPO3 CMS extension "typo3_dump_server".
  *
@@ -19,20 +21,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-$EM_CONF[$_EXTKEY] = [
-    'title' => 'Dump Server',
-    'description' => 'This extension brings the Symfony Var Dump Server to TYPO3.',
-    'category' => 'misc',
-    'author' => 'Konrad Michalik',
-    'author_email' => 'hej@konradmichalik.dev',
-    'state' => 'stable',
-    'version' => '0.2.0',
-    'constraints' => [
-        'depends' => [
-            'php' => '8.1.0-8.4.99',
-            'typo3' => '11.5.0-13.4.99',
-        ],
-        'conflicts' => [],
-        'suggests' => [],
-    ],
-];
+namespace KonradMichalik\Typo3DumpServer\Tests\Unit;
+
+use KonradMichalik\Typo3DumpServer\Configuration;
+use PHPUnit\Framework\TestCase;
+
+final class ConfigurationTest extends TestCase
+{
+    public function testExtKeyConstant(): void
+    {
+        self::assertSame('typo3_dump_server', Configuration::EXT_KEY);
+    }
+
+    public function testExtNameConstant(): void
+    {
+        self::assertSame('Typo3DumpServer', Configuration::EXT_NAME);
+    }
+}

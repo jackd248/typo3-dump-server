@@ -2,6 +2,25 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ *
+ * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 namespace KonradMichalik\Typo3DumpServer\Command;
 
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
@@ -24,15 +43,18 @@ use Symfony\Component\VarDumper\Server\DumpServer;
 */
 final class DumpServerCommand extends Command
 {
-    /** @var DumpDescriptorInterface[] */
-    private array $descriptors = [];
+    /** @var array<string, DumpDescriptorInterface> */
+    private array $descriptors;
 
+    /**
+     * @param array<string, DumpDescriptorInterface> $descriptors
+     */
     public function __construct(?string $name = null, array $descriptors = [])
     {
         $this->descriptors = $descriptors + [
-                'cli' => new CliDescriptor(new CliDumper()),
-                'html' => new HtmlDescriptor(new HtmlDumper()),
-            ];
+            'cli' => new CliDescriptor(new CliDumper()),
+            'html' => new HtmlDescriptor(new HtmlDumper()),
+        ];
         parent::__construct($name);
     }
 
@@ -61,7 +83,12 @@ EOF
         $io = new SymfonyStyle($input, $output);
         $format = $input->getOption('format');
 
-        if (!$descriptor = $this->descriptors[$format] ?? null) {
+        if (!is_string($format)) {
+            throw new InvalidArgumentException('Format option must be a string.', 8369534571);
+        }
+
+        $descriptor = $this->descriptors[$format] ?? null;
+        if ($descriptor === null) {
             throw new InvalidArgumentException(\sprintf('Unsupported format "%s".', $format), 8369534570);
         }
 
@@ -81,6 +108,9 @@ EOF
         return Command::SUCCESS;
     }
 
+    /**
+     * @return array<string>
+     */
     private function getAvailableFormats(): array
     {
         return array_keys($this->descriptors);
