@@ -28,6 +28,13 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 #[AsEventListener]
+
+/**
+ * DemoListener.
+ *
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0
+ */
 class DemoListener
 {
     public function __invoke(DumpEvent $event): void

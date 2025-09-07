@@ -23,6 +23,12 @@ declare(strict_types=1);
 
 namespace KonradMichalik\Typo3DumpServer\Utility;
 
+/**
+ * EnvironmentHelper.
+ *
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0
+ */
 final class EnvironmentHelper
 {
     private const DEFAULT_HOST = 'tcp://127.0.0.1:9912';
