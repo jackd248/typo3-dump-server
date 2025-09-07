@@ -39,8 +39,12 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Symfony\Component\VarDumper\Server\DumpServer;
 
 /**
-* @see https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/VarDumper/Command/ServerDumpCommand.php
-*/
+ * DumpServerCommand.
+ *
+ * @see https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/VarDumper/Command/ServerDumpCommand.php
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0
+ */
 final class DumpServerCommand extends Command
 {
     /** @var array<string, DumpDescriptorInterface> */

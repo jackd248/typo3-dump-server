@@ -26,6 +26,14 @@ namespace KonradMichalik\Typo3DumpServer\Tests\Unit\Utility;
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
 use PHPUnit\Framework\TestCase;
 
+
+/**
+ * EnvironmentHelperTest.
+ *
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0
+ */
+
 final class EnvironmentHelperTest extends TestCase
 {
     private string $originalEnvValue;

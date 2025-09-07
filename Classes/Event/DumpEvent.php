@@ -24,7 +24,10 @@ declare(strict_types=1);
 namespace KonradMichalik\Typo3DumpServer\Event;
 
 /**
- * PSR-14 Event that is dispatched when a dump is processed.
+ * DumpEvent.
+ *
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0
  */
 final class DumpEvent
 {
