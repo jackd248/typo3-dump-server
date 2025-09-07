@@ -35,7 +35,6 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  * @author Konrad Michalik <hej@konradmichalik.dev>
  * @license GPL-2.0
  */
-
 class DemoListener
 {
     public function __invoke(DumpEvent $event): void

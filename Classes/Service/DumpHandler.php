@@ -35,14 +35,12 @@ use Symfony\Component\VarDumper\Dumper\ServerDumper;
 use Symfony\Component\VarDumper\VarDumper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
  * DumpHandler.
  *
  * @author Konrad Michalik <hej@konradmichalik.dev>
  * @license GPL-2.0
  */
-
 final class DumpHandler
 {
     private const SERVER_CONNECTION_TIMEOUT = 0.5;

@@ -26,14 +26,12 @@ namespace KonradMichalik\Typo3DumpServer\Tests\Unit;
 use KonradMichalik\Typo3DumpServer\Configuration;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * ConfigurationTest.
  *
  * @author Konrad Michalik <hej@konradmichalik.dev>
  * @license GPL-2.0
  */
-
 final class ConfigurationTest extends TestCase
 {
     public function testExtKeyConstant(): void

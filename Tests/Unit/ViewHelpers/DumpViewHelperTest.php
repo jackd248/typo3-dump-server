@@ -26,14 +26,12 @@ namespace KonradMichalik\Typo3DumpServer\Tests\Unit\ViewHelpers;
 use KonradMichalik\Typo3DumpServer\ViewHelpers\DumpViewHelper;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * DumpViewHelperTest.
  *
  * @author Konrad Michalik <hej@konradmichalik.dev>
  * @license GPL-2.0
  */
-
 final class DumpViewHelperTest extends TestCase
 {
     private DumpViewHelper $viewHelper;
