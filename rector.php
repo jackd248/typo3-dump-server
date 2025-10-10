@@ -3,40 +3,28 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ * This file is part of the "typo3_dump_server" TYPO3 CMS extension.
  *
- * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ * (c) 2025 Konrad Michalik <hej@konradmichalik.dev>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use Rector\Config\RectorConfig;
 use Rector\PostRector\Rector\NameImportingPostRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 use Rector\ValueObject\PhpVersion;
-use Ssch\TYPO3Rector\CodeQuality\General\ConvertImplicitVariablesToExplicitGlobalsRector;
-use Ssch\TYPO3Rector\CodeQuality\General\ExtEmConfRector;
+use Ssch\TYPO3Rector\CodeQuality\General\{ConvertImplicitVariablesToExplicitGlobalsRector, ExtEmConfRector};
 use Ssch\TYPO3Rector\Configuration\Typo3Option;
-use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
-use Ssch\TYPO3Rector\Set\Typo3SetList;
+use Ssch\TYPO3Rector\Set\{Typo3LevelSetList, Typo3SetList};
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/Classes',
-        __DIR__ . '/Configuration',
-        __DIR__ . '/ext_emconf.php',
-        __DIR__ . '/Tests',
+        __DIR__.'/Classes',
+        __DIR__.'/Configuration',
+        __DIR__.'/ext_emconf.php',
+        __DIR__.'/Tests',
     ])
     // uncomment to reach your current PHP version
     // ->withPhpSets()
@@ -62,7 +50,7 @@ return RectorConfig::configure()
     // If you use withImportNames(), you should consider excluding some TYPO3 files.
     ->withSkip([
         // @see https://github.com/sabbelasichon/typo3-rector/issues/2536
-        __DIR__ . '/**/Configuration/ExtensionBuilder/*',
+        __DIR__.'/**/Configuration/ExtensionBuilder/*',
         NameImportingPostRector::class => [
             'ext_localconf.php', // This line can be removed since TYPO3 11.4, see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/11.4/Important-94280-MoveContentsOfExtPhpIntoLocalScopes.html
             'ext_tables.php', // This line can be removed since TYPO3 11.4, see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/11.4/Important-94280-MoveContentsOfExtPhpIntoLocalScopes.html

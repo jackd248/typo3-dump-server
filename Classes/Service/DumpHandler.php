@@ -3,22 +3,12 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ * This file is part of the "typo3_dump_server" TYPO3 CMS extension.
  *
- * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ * (c) 2025 Konrad Michalik <hej@konradmichalik.dev>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace KonradMichalik\Typo3DumpServer\Service;
@@ -27,18 +17,19 @@ use KonradMichalik\Typo3DumpServer\Event\DumpEvent;
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\ContextProvider\CliContextProvider;
-use Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Symfony\Component\VarDumper\Dumper\ServerDumper;
+use Symfony\Component\VarDumper\Dumper\{CliDumper, HtmlDumper, ServerDumper};
+use Symfony\Component\VarDumper\Dumper\ContextProvider\{CliContextProvider, SourceContextProvider};
 use Symfony\Component\VarDumper\VarDumper;
+use Throwable;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function in_array;
+use function is_array;
 
 /**
  * DumpHandler.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @author Konrad Michalik <hej@konradmichalik.dev
  * @license GPL-2.0
  */
 final class DumpHandler
@@ -48,27 +39,27 @@ final class DumpHandler
     private static ?EventDispatcherInterface $eventDispatcher = null;
 
     /**
-    * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
-    */
+     * @see https://symfony.com/doc/current/components/var_dumper.html#the-dump-server
+     */
     public static function register(): void
     {
         $cloner = new VarCloner();
         $serverAvailable = self::isServerAvailable(EnvironmentHelper::getHost());
         $suppressDumpIfServerIsUnavailable = false;
         if (
-            isset($GLOBALS['TYPO3_CONF_VARS']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']) &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']) &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']) &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'])
+            isset($GLOBALS['TYPO3_CONF_VARS'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS'])
+            && isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'])
+            && isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'])
+            && isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'])
         ) {
-            $suppressDumpIfServerIsUnavailable = (bool)$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'];
+            $suppressDumpIfServerIsUnavailable = (bool) $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'];
         }
 
         if ($serverAvailable) {
-            $fallbackDumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
+            $fallbackDumper = in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
             $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
                 'cli' => new CliContextProvider(),
                 'source' => new SourceContextProvider(),
@@ -80,7 +71,7 @@ final class DumpHandler
 
                 // Dispatch PSR-14 event with original variable
                 $eventDispatcher = self::getEventDispatcher();
-                if ($eventDispatcher !== null) {
+                if (null !== $eventDispatcher) {
                     $event = new DumpEvent($var, $context);
                     $eventDispatcher->dispatch($event);
                 }
@@ -97,11 +88,11 @@ final class DumpHandler
     {
         $urlParts = parse_url($host);
 
-        if ($urlParts === false || !isset($urlParts['host'], $urlParts['port'])) {
+        if (false === $urlParts || !isset($urlParts['host'], $urlParts['port'])) {
             return false;
         }
 
-        if ($urlParts['host'] === '' || $urlParts['port'] === 0) {
+        if ('' === $urlParts['host'] || 0 === $urlParts['port']) {
             return false;
         }
 
@@ -110,11 +101,12 @@ final class DumpHandler
             $urlParts['port'],
             $errno,
             $errstr,
-            self::SERVER_CONNECTION_TIMEOUT
+            self::SERVER_CONNECTION_TIMEOUT,
         );
 
-        if ($connection !== false) {
+        if (false !== $connection) {
             fclose($connection);
+
             return true;
         }
 
@@ -126,11 +118,11 @@ final class DumpHandler
      */
     private static function getEventDispatcher(): ?EventDispatcherInterface
     {
-        if (self::$eventDispatcher === null) {
+        if (null === self::$eventDispatcher) {
             try {
                 // Get TYPO3 PSR-14 event dispatcher
                 self::$eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 // Event dispatcher not available (e.g., during bootstrap)
                 self::$eventDispatcher = null;
             }

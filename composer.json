@@ -27,6 +27,7 @@
 		"friendsofphp/php-cs-fixer": "^3.52",
 		"helhum/typo3-console": "^7.0 || ^8.1",
 		"helmich/typo3-typoscript-lint": "^3.2",
+		"konradmichalik/php-cs-fixer-preset": "^0.1.0",
 		"konradmichalik/php-doc-block-header-fixer": "^0.2.1",
 		"phpstan/phpstan-deprecation-rules": "^1.0 || ^2.0",
 		"phpstan/phpstan-phpunit": "^1.0 || ^2.0",
@@ -58,6 +59,9 @@
 		"sort-packages": true
 	},
 	"extra": {
+		"konradmichalik/php-cs-fixer-preset": {
+			"copyright": 2025
+		},
 		"typo3/cms": {
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
 			"extension-key": "typo3_dump_server",
@@ -80,7 +84,7 @@
 		],
 		"fix:composer": "@composer normalize",
 		"fix:editorconfig": "@lint:editorconfig --fix",
-		"fix:php": "php vendor/bin/php-cs-fixer --config=php-cs-fixer.php fix",
+		"fix:php": "php vendor/bin/php-cs-fixer --config=.php-cs-fixer.php fix",
 		"lint": [
 			"@lint:composer",
 			"@lint:editorconfig",
