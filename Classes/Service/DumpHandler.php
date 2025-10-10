@@ -43,9 +43,39 @@ final class DumpHandler
      */
     public static function register(): void
     {
+        if (self::isServerAvailable(EnvironmentHelper::getHost())) {
+            self::registerServerHandler();
+        } elseif (self::shouldSuppressDump()) {
+            VarDumper::setHandler(function (): void {});
+        }
+    }
+
+    private static function registerServerHandler(): void
+    {
         $cloner = new VarCloner();
-        $serverAvailable = self::isServerAvailable(EnvironmentHelper::getHost());
-        $suppressDumpIfServerIsUnavailable = false;
+        $fallbackDumper = in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
+        $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
+            'cli' => new CliContextProvider(),
+            'source' => new SourceContextProvider(),
+        ]);
+
+        VarDumper::setHandler(static function (mixed $var) use ($cloner, $dumper): ?string {
+            $data = $cloner->cloneVar($var);
+            $context = [];
+
+            // Dispatch PSR-14 event with original variable
+            $eventDispatcher = self::getEventDispatcher();
+            if (null !== $eventDispatcher) {
+                $event = new DumpEvent($var, $context);
+                $eventDispatcher->dispatch($event);
+            }
+
+            return $dumper->dump($data);
+        });
+    }
+
+    private static function shouldSuppressDump(): bool
+    {
         if (
             isset($GLOBALS['TYPO3_CONF_VARS'])
             && is_array($GLOBALS['TYPO3_CONF_VARS'])
@@ -55,33 +85,10 @@ final class DumpHandler
             && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'])
             && isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'])
         ) {
-            $suppressDumpIfServerIsUnavailable = (bool) $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'];
+            return (bool) $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'];
         }
 
-        if ($serverAvailable) {
-            $fallbackDumper = in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliDumper() : new HtmlDumper();
-            $dumper = new ServerDumper(EnvironmentHelper::getHost(), $fallbackDumper, [
-                'cli' => new CliContextProvider(),
-                'source' => new SourceContextProvider(),
-            ]);
-
-            VarDumper::setHandler(static function (mixed $var) use ($cloner, $dumper): ?string {
-                $data = $cloner->cloneVar($var);
-                $context = [];
-
-                // Dispatch PSR-14 event with original variable
-                $eventDispatcher = self::getEventDispatcher();
-                if (null !== $eventDispatcher) {
-                    $event = new DumpEvent($var, $context);
-                    $eventDispatcher->dispatch($event);
-                }
-
-                // Process the dump
-                return $dumper->dump($data);
-            });
-        } elseif ($suppressDumpIfServerIsUnavailable) {
-            VarDumper::setHandler(function (): void {});
-        }
+        return false;
     }
 
     private static function isServerAvailable(string $host): bool
@@ -113,9 +120,6 @@ final class DumpHandler
         return false;
     }
 
-    /**
-     * Get the TYPO3 event dispatcher instance.
-     */
     private static function getEventDispatcher(): ?EventDispatcherInterface
     {
         if (null === self::$eventDispatcher) {
