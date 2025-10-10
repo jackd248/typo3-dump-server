@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dcce8271dd0dca379d0c9f2705989e92",
+    "content-hash": "0f458068f4e261bb949eef6f8f8ef3ef",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5545,59 +5545,6 @@
                 }
             ],
             "time": "2022-12-30T00:23:10+00:00"
-        },
-        {
-            "name": "eliashaeussler/php-cs-fixer-config",
-            "version": "2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eliashaeussler/php-cs-fixer-config.git",
-                "reference": "130111f9aef350910bd2224cd244e6e1b8b5ba82"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/130111f9aef350910bd2224cd244e6e1b8b5ba82",
-                "reference": "130111f9aef350910bd2224cd244e6e1b8b5ba82",
-                "shasum": ""
-            },
-            "require": {
-                "friendsofphp/php-cs-fixer": "^3.14",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
-                "symfony/finder": "^5.4 || ^6.0 || ^7.0"
-            },
-            "require-dev": {
-                "armin/editorconfig-cli": "^1.5 || ^2.0",
-                "eliashaeussler/phpstan-config": "^2.0.0",
-                "eliashaeussler/phpunit-attributes": "^1.1",
-                "eliashaeussler/rector-config": "^3.0",
-                "ergebnis/composer-normalize": "^2.29",
-                "phpstan/extension-installer": "^1.2",
-                "phpunit/phpunit": "^10.4 || ^11.0 || ^12.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "EliasHaeussler\\PhpCsFixerConfig\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Elias Häußler",
-                    "email": "elias@haeussler.dev",
-                    "homepage": "https://haeussler.dev",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "My personal configuration for PHP-CS-Fixer",
-            "support": {
-                "issues": "https://github.com/eliashaeussler/php-cs-fixer-config/issues",
-                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/2.3.0"
-            },
-            "time": "2025-05-18T14:45:22+00:00"
         },
         {
             "name": "eliashaeussler/version-bumper",
