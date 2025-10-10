@@ -3,22 +3,12 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the TYPO3 CMS extension "typo3_dump_server".
+ * This file is part of the "typo3_dump_server" TYPO3 CMS extension.
  *
- * Copyright (C) 2025 Konrad Michalik <hej@konradmichalik.dev>
+ * (c) 2025 Konrad Michalik <hej@konradmichalik.dev>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace KonradMichalik\Typo3DumpServer\Command;
@@ -26,23 +16,23 @@ namespace KonradMichalik\Typo3DumpServer\Command;
 use KonradMichalik\Typo3DumpServer\Utility\EnvironmentHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\{InputInterface, InputOption};
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\VarDumper\Cloner\Data;
-use Symfony\Component\VarDumper\Command\Descriptor\CliDescriptor;
-use Symfony\Component\VarDumper\Command\Descriptor\DumpDescriptorInterface;
-use Symfony\Component\VarDumper\Command\Descriptor\HtmlDescriptor;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use Symfony\Component\VarDumper\Command\Descriptor\{CliDescriptor, DumpDescriptorInterface, HtmlDescriptor};
+use Symfony\Component\VarDumper\Dumper\{CliDumper, HtmlDumper};
 use Symfony\Component\VarDumper\Server\DumpServer;
+
+use function is_string;
+use function sprintf;
 
 /**
  * DumpServerCommand.
  *
  * @see https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/VarDumper/Command/ServerDumpCommand.php
- * @author Konrad Michalik <hej@konradmichalik.dev>
+ *
+ * @author Konrad Michalik <hej@konradmichalik.dev
  * @license GPL-2.0
  */
 final class DumpServerCommand extends Command
@@ -65,7 +55,7 @@ final class DumpServerCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, \sprintf('The output format (%s)', implode(', ', $this->getAvailableFormats())), 'cli')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, sprintf('The output format (%s)', implode(', ', $this->getAvailableFormats())), 'cli')
             ->setHelp(
                 <<<'EOF'
 <info>%command.name%</info> starts a dump server that collects and displays
@@ -92,8 +82,8 @@ EOF
         }
 
         $descriptor = $this->descriptors[$format] ?? null;
-        if ($descriptor === null) {
-            throw new InvalidArgumentException(\sprintf('Unsupported format "%s".', $format), 8369534570);
+        if (null === $descriptor) {
+            throw new InvalidArgumentException(sprintf('Unsupported format "%s".', $format), 8369534570);
         }
 
         $server = new DumpServer(EnvironmentHelper::getHost());
@@ -109,6 +99,7 @@ EOF
         $server->listen(function (Data $data, array $context, int $clientId) use ($descriptor, $io) {
             $descriptor->describe($io, $data, $context, $clientId);
         });
+
         return Command::SUCCESS;
     }
 
