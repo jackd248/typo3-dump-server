@@ -15,12 +15,13 @@
 
 This extension brings the [Symfony Var Dump Server](https://symfony.com/doc/current/components/var_dumper.html#the-dump-server) to TYPO3.
 
+> [!NOTE]
+> This package is an alternative approach to the default [TYPO3 debugging methods](https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Debugging/Index.html) or 
+> the universal use of [xdebug](https://xdebug.org/).
+
 The dump server gathers all `dump` call outputs, e.g. for preventing interference with HTTP or API responses.
 
 ![Console Command](./Documentation/Images/screenshot.png)
-
-> [!NOTE]
-> This package is an alternative approach to the default [TYPO3 debugging methods](https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Debugging/Index.html) or the universal use of [xdebug](https://xdebug.org/).
 
 ## 🔥 Installation
 
