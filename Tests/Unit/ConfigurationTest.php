@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * ConfigurationTest.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 final class ConfigurationTest extends TestCase
 {

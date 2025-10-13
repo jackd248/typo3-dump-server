@@ -20,8 +20,8 @@ use function is_string;
 /**
  * DumpViewHelper.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 class DumpViewHelper extends AbstractViewHelper
 {

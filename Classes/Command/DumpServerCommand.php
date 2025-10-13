@@ -32,8 +32,8 @@ use function sprintf;
  *
  * @see https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/VarDumper/Command/ServerDumpCommand.php
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 final class DumpServerCommand extends Command
 {

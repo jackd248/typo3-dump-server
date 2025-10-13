@@ -16,8 +16,8 @@ namespace KonradMichalik\Typo3DumpServer;
 /**
  * Configuration.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 class Configuration
 {

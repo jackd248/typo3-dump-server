@@ -21,8 +21,8 @@ use function is_string;
 /**
  * EnvironmentHelperTest.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 final class EnvironmentHelperTest extends TestCase
 {

@@ -19,8 +19,8 @@ use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 /**
  * DemoMiddleware.
  *
- * @author Konrad Michalik <hej@konradmichalik.dev
- * @license GPL-2.0
+ * @author Konrad Michalik <hej@konradmichalik.dev>
+ * @license GPL-2.0-or-later
  */
 class DemoMiddleware implements MiddlewareInterface
 {
