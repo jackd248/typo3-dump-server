@@ -33,6 +33,6 @@ return Config::create()
     ->withFinder(
         static fn (Finder $finder) => $finder
             ->in(__DIR__)
-            ->notPath(['ext_emconf.php'])
+            ->notPath(['ext_emconf.php']),
     )
 ;
