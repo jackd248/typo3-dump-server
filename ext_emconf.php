@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the "typo3_dump_server" TYPO3 CMS extension.
  *
@@ -18,7 +16,7 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Konrad Michalik',
     'author_email' => 'hej@konradmichalik.dev',
     'state' => 'stable',
-    'version' => '0.3.0',
+    'version' => '0.5.0',
     'constraints' => [
         'depends' => [
             'php' => '8.1.0-8.4.99',
