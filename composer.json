@@ -23,6 +23,7 @@
 	},
 	"require-dev": {
 		"eliashaeussler/version-bumper": "^2.4 || ^3.0 || ^4.0",
+		"konradmichalik/ttt": "^0.2.0",
 		"phpunit/phpunit": "^10.2 || ^11.0 || ^12.0 || ^13.0",
 		"typo3/cms-base-distribution": "^11.5 || ^12.4 || ^13.4 || ^14.0",
 		"typo3/cms-lowlevel": "^11.5 || ^12.4 || ^13.4 || ^14.0"
