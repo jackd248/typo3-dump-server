@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e05955e8f4592f162a1cdd5062be8b8",
+    "content-hash": "9648ca224ddf7fffcb682e6a7042218b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5497,16 +5497,16 @@
         },
         {
             "name": "konradmichalik/ttt",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/konradmichalik/ttt.git",
-                "reference": "7924d932009d8a20b9b4e12e67bf4baf28dd0057"
+                "reference": "ec82651b4389945ee17b4cfde5b1f728aee78202"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/konradmichalik/ttt/zipball/7924d932009d8a20b9b4e12e67bf4baf28dd0057",
-                "reference": "7924d932009d8a20b9b4e12e67bf4baf28dd0057",
+                "url": "https://api.github.com/repos/konradmichalik/ttt/zipball/ec82651b4389945ee17b4cfde5b1f728aee78202",
+                "reference": "ec82651b4389945ee17b4cfde5b1f728aee78202",
                 "shasum": ""
             },
             "require": {
@@ -5556,9 +5556,9 @@
             ],
             "support": {
                 "issues": "https://github.com/konradmichalik/ttt/issues",
-                "source": "https://github.com/konradmichalik/ttt/tree/0.2.0"
+                "source": "https://github.com/konradmichalik/ttt/tree/0.3.0"
             },
-            "time": "2026-07-27T11:34:34+00:00"
+            "time": "2026-07-28T06:32:33+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -9774,5 +9774,5 @@
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
