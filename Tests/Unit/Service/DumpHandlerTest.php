@@ -140,14 +140,15 @@ final class DumpHandlerTest extends TestCase
 
         // Only TYPO3_CONF_VARS set
         $this->setTypo3ConfVars([]);
+        $GLOBALS['TYPO3_CONF_VARS'] = [];
         self::assertFalse($method->invoke(null));
 
         // EXTENSIONS set but not typo3_dump_server
-        $this->setTypo3ConfVars(['EXTENSIONS' => []]);
+        $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => []];
         self::assertFalse($method->invoke(null));
 
         // typo3_dump_server set but no suppressDump
-        $this->setTypo3ConfVars(['EXTENSIONS' => ['typo3_dump_server' => []]]);
+        $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => ['typo3_dump_server' => []]];
         self::assertFalse($method->invoke(null));
     }
 
