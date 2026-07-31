@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace KonradMichalik\Typo3DumpServer\Tests\Unit\Service;
 
+use KonradMichalik\Ttt\Attribute\WithTypo3ConfVars;
+use KonradMichalik\Ttt\Traits\ConfVarsSandbox;
 use KonradMichalik\Typo3DumpServer\Service\DumpHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -21,7 +23,6 @@ use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\VarDumper\VarDumper;
 
-use function is_array;
 use function is_string;
 
 /**
@@ -32,6 +33,8 @@ use function is_string;
  */
 final class DumpHandlerTest extends TestCase
 {
+    use ConfVarsSandbox;
+
     private string $originalHostValue;
 
     protected function setUp(): void
@@ -42,11 +45,11 @@ final class DumpHandlerTest extends TestCase
 
     protected function tearDown(): void
     {
-        // Reset VarDumper handler after each test
+        // Reset VarDumper handler after each test (not sandboxed by ttt)
         VarDumper::setHandler(null);
 
-        // Reset GLOBALS
-        unset($GLOBALS['TYPO3_CONF_VARS']);
+        // Restore any mid-test TYPO3_CONF_VARS manipulations
+        $this->restoreTypo3ConfVars();
 
         // Reset cached event dispatcher
         (new ReflectionProperty(DumpHandler::class, 'eventDispatcher'))->setValue(null, null);
@@ -121,19 +124,9 @@ final class DumpHandlerTest extends TestCase
         fclose($server);
     }
 
+    #[WithTypo3ConfVars(['EXTENSIONS' => ['typo3_dump_server' => ['suppressDump' => true]]])]
     public function testRegisterWithSuppressDumpSetsEmptyHandler(): void
     {
-        // Setup GLOBALS to enable suppressDump
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']) || !is_array($GLOBALS['TYPO3_CONF_VARS'])) {
-            $GLOBALS['TYPO3_CONF_VARS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] = [];
-        }
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] = true;
         putenv('TYPO3_DUMP_SERVER_HOST=tcp://127.0.0.1:59999');
 
         DumpHandler::register();
@@ -210,38 +203,18 @@ final class DumpHandlerTest extends TestCase
         self::assertFalse($method->invoke(null));
     }
 
+    #[WithTypo3ConfVars(['EXTENSIONS' => ['typo3_dump_server' => ['suppressDump' => true]]])]
     public function testShouldSuppressDumpReturnsTrueWhenConfigured(): void
     {
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']) || !is_array($GLOBALS['TYPO3_CONF_VARS'])) {
-            $GLOBALS['TYPO3_CONF_VARS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] = [];
-        }
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] = true;
-
         $reflection = new ReflectionClass(DumpHandler::class);
         $method = $reflection->getMethod('shouldSuppressDump');
 
         self::assertTrue($method->invoke(null));
     }
 
+    #[WithTypo3ConfVars(['EXTENSIONS' => ['typo3_dump_server' => ['suppressDump' => false]]])]
     public function testShouldSuppressDumpReturnsFalseWhenSetToFalse(): void
     {
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']) || !is_array($GLOBALS['TYPO3_CONF_VARS'])) {
-            $GLOBALS['TYPO3_CONF_VARS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] = [];
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] = [];
-        }
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server']['suppressDump'] = false;
-
         $reflection = new ReflectionClass(DumpHandler::class);
         $method = $reflection->getMethod('shouldSuppressDump');
 
@@ -253,16 +226,17 @@ final class DumpHandlerTest extends TestCase
         $reflection = new ReflectionClass(DumpHandler::class);
         $method = $reflection->getMethod('shouldSuppressDump');
 
-        // Test with only TYPO3_CONF_VARS set
+        // Only TYPO3_CONF_VARS set
+        $this->setTypo3ConfVars([]);
         $GLOBALS['TYPO3_CONF_VARS'] = [];
         self::assertFalse($method->invoke(null));
 
-        // Test with EXTENSIONS set but not typo3_dump_server
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS'] = [];
+        // EXTENSIONS set but not typo3_dump_server
+        $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => []];
         self::assertFalse($method->invoke(null));
 
-        // Test with typo3_dump_server set but no suppressDump
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_dump_server'] = [];
+        // typo3_dump_server set but no suppressDump
+        $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => ['typo3_dump_server' => []]];
         self::assertFalse($method->invoke(null));
     }
 
@@ -271,15 +245,20 @@ final class DumpHandlerTest extends TestCase
         $reflection = new ReflectionClass(DumpHandler::class);
         $method = $reflection->getMethod('shouldSuppressDump');
 
-        // Test with non-array TYPO3_CONF_VARS
+        // Register a restore point; the scalar assignments below cannot be
+        // expressed through the array-only sandbox API, but restoreTypo3ConfVars()
+        // still reverts $GLOBALS['TYPO3_CONF_VARS'] to this snapshot afterwards.
+        $this->setTypo3ConfVars([]);
+
+        // Non-array TYPO3_CONF_VARS
         $GLOBALS['TYPO3_CONF_VARS'] = 'not-an-array';
         self::assertFalse($method->invoke(null));
 
-        // Reset and test with non-array EXTENSIONS
+        // Non-array EXTENSIONS
         $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => 'not-an-array'];
         self::assertFalse($method->invoke(null));
 
-        // Reset and test with non-array extension config
+        // Non-array extension config
         $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => ['typo3_dump_server' => 'not-an-array']];
         self::assertFalse($method->invoke(null));
     }
