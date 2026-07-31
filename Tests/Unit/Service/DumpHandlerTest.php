@@ -17,8 +17,13 @@ use KonradMichalik\Ttt\Attribute\WithTypo3ConfVars;
 use KonradMichalik\Ttt\Traits\ConfVarsSandbox;
 use KonradMichalik\Typo3DumpServer\Service\DumpHandler;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
+use ReflectionProperty;
+use RuntimeException;
 use Symfony\Component\VarDumper\VarDumper;
+
+use function is_string;
 
 /**
  * DumpHandlerTest.
@@ -30,6 +35,14 @@ final class DumpHandlerTest extends TestCase
 {
     use ConfVarsSandbox;
 
+    private string $originalHostValue;
+
+    protected function setUp(): void
+    {
+        $dumpServerHost = getenv('TYPO3_DUMP_SERVER_HOST');
+        $this->originalHostValue = is_string($dumpServerHost) ? $dumpServerHost : '';
+    }
+
     protected function tearDown(): void
     {
         // Reset VarDumper handler after each test (not sandboxed by ttt)
@@ -37,21 +50,85 @@ final class DumpHandlerTest extends TestCase
 
         // Restore any mid-test TYPO3_CONF_VARS manipulations
         $this->restoreTypo3ConfVars();
+
+        // Reset cached event dispatcher
+        (new ReflectionProperty(DumpHandler::class, 'eventDispatcher'))->setValue(null, null);
+
+        if ('' !== $this->originalHostValue) {
+            putenv('TYPO3_DUMP_SERVER_HOST='.$this->originalHostValue);
+        } else {
+            putenv('TYPO3_DUMP_SERVER_HOST');
+        }
     }
 
-    public function testRegisterWithoutServerSetsNoHandler(): void
+    public function testRegisterInstallsHandlerWithoutConnectingToServer(): void
     {
-        // When server is not available and suppressDump is not set,
-        // the default handler should remain (which will be null in tests)
+        $server = stream_socket_server('tcp://127.0.0.1:0');
+        self::assertNotFalse($server);
+        $address = stream_socket_get_name($server, false);
+        putenv('TYPO3_DUMP_SERVER_HOST=tcp://'.$address);
+
         DumpHandler::register();
 
-        // We can't directly test the handler, but we can verify no exception was thrown
-        self::assertSame(1, 1);
+        $handler = VarDumper::setHandler(null);
+        self::assertNotNull($handler, 'register() should install a dump handler');
+        self::assertFalse(
+            $this->hasPendingConnection($server),
+            'register() must not connect to the dump server',
+        );
+
+        fclose($server);
+    }
+
+    public function testFirstDumpConnectsToServer(): void
+    {
+        $server = stream_socket_server('tcp://127.0.0.1:0');
+        self::assertNotFalse($server);
+        $address = stream_socket_get_name($server, false);
+        putenv('TYPO3_DUMP_SERVER_HOST=tcp://'.$address);
+
+        DumpHandler::register();
+        dump('test');
+
+        self::assertTrue(
+            $this->hasPendingConnection($server),
+            'The first dump() call should connect to the dump server',
+        );
+
+        fclose($server);
+    }
+
+    public function testDumpStillReachesServerWhenEventListenerThrows(): void
+    {
+        $server = stream_socket_server('tcp://127.0.0.1:0');
+        self::assertNotFalse($server);
+        $address = stream_socket_get_name($server, false);
+        putenv('TYPO3_DUMP_SERVER_HOST=tcp://'.$address);
+
+        $throwingDispatcher = new class implements EventDispatcherInterface {
+            public function dispatch(object $event): object
+            {
+                throw new RuntimeException('listener failure', 2834025464);
+            }
+        };
+        (new ReflectionProperty(DumpHandler::class, 'eventDispatcher'))->setValue(null, $throwingDispatcher);
+
+        DumpHandler::register();
+        dump('test');
+
+        self::assertTrue(
+            $this->hasPendingConnection($server),
+            'A throwing event listener must not prevent the dump from reaching the server',
+        );
+
+        fclose($server);
     }
 
     #[WithTypo3ConfVars(['EXTENSIONS' => ['typo3_dump_server' => ['suppressDump' => true]]])]
     public function testRegisterWithSuppressDumpSetsEmptyHandler(): void
     {
+        putenv('TYPO3_DUMP_SERVER_HOST=tcp://127.0.0.1:59999');
+
         DumpHandler::register();
 
         // Verify that a handler was set (dump() should not produce output)
@@ -60,6 +137,17 @@ final class DumpHandlerTest extends TestCase
         $output = ob_get_clean();
 
         self::assertSame('', $output);
+    }
+
+    public function testDumpFallsBackToDefaultHandlerWhenServerUnavailableAndNotSuppressed(): void
+    {
+        putenv('TYPO3_DUMP_SERVER_HOST=tcp://127.0.0.1:59999');
+
+        DumpHandler::register();
+
+        $result = dump('fallback-value');
+
+        self::assertSame('fallback-value', $result);
     }
 
     public function testIsServerAvailableReturnsFalseForInvalidHost(): void
@@ -173,5 +261,17 @@ final class DumpHandlerTest extends TestCase
         // Non-array extension config
         $GLOBALS['TYPO3_CONF_VARS'] = ['EXTENSIONS' => ['typo3_dump_server' => 'not-an-array']];
         self::assertFalse($method->invoke(null));
+    }
+
+    /**
+     * @param resource $server
+     */
+    private function hasPendingConnection($server): bool
+    {
+        $read = [$server];
+        $write = [];
+        $except = [];
+
+        return stream_select($read, $write, $except, 0, 50000) > 0;
     }
 }
