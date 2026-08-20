@@ -6,7 +6,7 @@
 
 [![Latest Stable Version](https://typo3-badges.dev/badge/typo3_dump_server/version/shields.svg)](https://extensions.typo3.org/extension/typo3_dump_server)
 ![TYPO3](https://img.shields.io/badge/TYPO3-11.5%20%7C%2012.4%20%7C%2013.4%20%7C%2014.0-orange.svg)
-[![Coverage](https://img.shields.io/coverallsCoverage/github/konradmichalik/typo3-dump-server?logo=coveralls)](https://coveralls.io/github/konradmichalik/typo3-dump-server)
+[![Coverage](https://coveralls.io/repos/github/konradmichalik/typo3-dump-server/badge.svg?branch=main)](https://coveralls.io/github/konradmichalik/typo3-dump-server)
 [![CGL](https://img.shields.io/github/actions/workflow/status/konradmichalik/typo3-dump-server/cgl.yml?label=cgl&logo=github)](https://github.com/konradmichalik/typo3-dump-server/actions/workflows/cgl.yml)
 [![Tests](https://img.shields.io/github/actions/workflow/status/konradmichalik/typo3-dump-server/tests.yml?label=tests&logo=github)](https://github.com/konradmichalik/typo3-dump-server/actions/workflows/tests.yml)
 [![License](https://poser.pugx.org/konradmichalik/typo3-dump-server/license)](LICENSE.md)
