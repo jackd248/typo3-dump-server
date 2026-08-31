@@ -1,0 +1,9 @@
+type: php
+docroot: .Build
+additional_hostnames:
+  - 12.typo3-dump-server
+  - 13.typo3-dump-server
+  - 14.typo3-dump-server
+hooks:
+   post-start:
+    - exec: mkdir -p /var/www/html/.Build/ && cp -r /var/www/html/.ddev/.setup/templates/. /var/www/html/.Build/ && bash /var/www/html/.ddev/.setup/scripts/write-git-info.sh
