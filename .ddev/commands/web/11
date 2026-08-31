@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+## #ddev-generated
 ## Description: Exec command for TYPO3 instance 11.
 ## Usage: 11
 ## Example: "ddev 11 composer du -o" or "ddev 11 typo3 cache:flush"
