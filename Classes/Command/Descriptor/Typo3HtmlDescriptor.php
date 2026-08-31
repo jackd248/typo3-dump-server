@@ -56,10 +56,9 @@ final class Typo3HtmlDescriptor implements DumpDescriptorInterface
 
     public function __construct(
         private readonly HtmlDumper $dumper,
-        private readonly ?IdeLinkGenerator $ideLinkGenerator = null,
+        private readonly ?IdeLinkGenerator $ideLinkGenerator,
     ) {}
 
-    /** @phpstan-ignore missingType.iterableValue */
     public function describe(OutputInterface $output, Data $data, array $context, int $clientId): void
     {
         $this->initialize($output);

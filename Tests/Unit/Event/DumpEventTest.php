@@ -28,14 +28,14 @@ final class DumpEventTest extends TestCase
     public function testGetValueReturnsOriginalValue(): void
     {
         $value = ['foo' => 'bar'];
-        $event = new DumpEvent($value);
+        $event = new DumpEvent($value, []);
 
         self::assertSame($value, $event->getValue());
     }
 
     public function testGetContextReturnsEmptyArrayByDefault(): void
     {
-        $event = new DumpEvent('test');
+        $event = new DumpEvent('test', []);
 
         self::assertSame([], $event->getContext());
     }
@@ -50,42 +50,42 @@ final class DumpEventTest extends TestCase
 
     public function testGetTypeReturnsCorrectTypeForString(): void
     {
-        $event = new DumpEvent('test');
+        $event = new DumpEvent('test', []);
 
         self::assertSame('string', $event->getType());
     }
 
     public function testGetTypeReturnsCorrectTypeForArray(): void
     {
-        $event = new DumpEvent(['foo' => 'bar']);
+        $event = new DumpEvent(['foo' => 'bar'], []);
 
         self::assertSame('array', $event->getType());
     }
 
     public function testGetTypeReturnsCorrectTypeForObject(): void
     {
-        $event = new DumpEvent(new stdClass());
+        $event = new DumpEvent(new stdClass(), []);
 
         self::assertSame('object', $event->getType());
     }
 
     public function testGetTypeReturnsCorrectTypeForInteger(): void
     {
-        $event = new DumpEvent(123);
+        $event = new DumpEvent(123, []);
 
         self::assertSame('integer', $event->getType());
     }
 
     public function testGetTypeReturnsCorrectTypeForBoolean(): void
     {
-        $event = new DumpEvent(true);
+        $event = new DumpEvent(true, []);
 
         self::assertSame('boolean', $event->getType());
     }
 
     public function testGetTypeReturnsCorrectTypeForNull(): void
     {
-        $event = new DumpEvent(null);
+        $event = new DumpEvent(null, []);
 
         self::assertSame('NULL', $event->getType());
     }

@@ -9,6 +9,9 @@ services:
         exclude: '../Classes/Domain/Model/*'
 
     KonradMichalik\Typo3DumpServer\Command\DumpServerCommand:
+        arguments:
+            $name: null
+            $descriptors: []
         tags:
             -   name: console.command
                 command: 'server:dump'

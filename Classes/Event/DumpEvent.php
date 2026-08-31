@@ -28,7 +28,7 @@ final readonly class DumpEvent
      */
     public function __construct(
         private mixed $value,
-        private array $context = [],
+        private array $context,
     ) {}
 
     /**

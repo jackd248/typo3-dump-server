@@ -44,7 +44,7 @@ final class DumpServerCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->command = new DumpServerCommand('server:dump');
+        $this->command = new DumpServerCommand('server:dump', []);
 
         $dumpServerIde = getenv('TYPO3_DUMP_SERVER_IDE');
         $this->originalIdeValue = is_string($dumpServerIde) ? $dumpServerIde : '';
@@ -133,7 +133,7 @@ final class DumpServerCommandTest extends TestCase
         putenv('TYPO3_DUMP_SERVER_PATH_MAP=/var/www/html=/Users/me/Projects');
         putenv('DDEV_APPROOT');
 
-        $ideLinkGenerator = $this->extractIdeLinkGenerator(new DumpServerCommand('server:dump'));
+        $ideLinkGenerator = $this->extractIdeLinkGenerator(new DumpServerCommand('server:dump', []));
 
         self::assertInstanceOf(IdeLinkGenerator::class, $ideLinkGenerator);
         self::assertSame(
@@ -148,7 +148,7 @@ final class DumpServerCommandTest extends TestCase
         putenv('TYPO3_DUMP_SERVER_PATH_MAP');
         putenv('DDEV_APPROOT');
 
-        $ideLinkGenerator = $this->extractIdeLinkGenerator(new DumpServerCommand('server:dump'));
+        $ideLinkGenerator = $this->extractIdeLinkGenerator(new DumpServerCommand('server:dump', []));
 
         self::assertInstanceOf(IdeLinkGenerator::class, $ideLinkGenerator);
         self::assertSame(

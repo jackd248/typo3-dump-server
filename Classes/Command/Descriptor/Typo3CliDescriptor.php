@@ -41,10 +41,9 @@ final class Typo3CliDescriptor implements DumpDescriptorInterface
 
     public function __construct(
         private readonly CliDumper $dumper,
-        private readonly ?IdeLinkGenerator $ideLinkGenerator = null,
+        private readonly ?IdeLinkGenerator $ideLinkGenerator,
     ) {}
 
-    /** @phpstan-ignore missingType.iterableValue */
     public function describe(OutputInterface $output, Data $data, array $context, int $clientId): void
     {
         $io = $output instanceof SymfonyStyle ? $output : new SymfonyStyle(new ArrayInput([]), $output);
@@ -60,15 +59,26 @@ final class Typo3CliDescriptor implements DumpDescriptorInterface
         $this->lastIdentifier = $clientId;
 
         $section = sprintf('Received from client #%d', $clientId);
-        $this->resolveRequestContext($context, $rows, $section);
-        $this->resolveCliContext($context, $section);
+        $requestContext = $this->resolveRequestContext($context);
+        if (null !== $requestContext['section']) {
+            $section = $requestContext['section'];
+        }
+
+        $cliSection = $this->resolveCliContext($context);
+        if (null !== $cliSection) {
+            $section = $cliSection;
+        }
 
         if ($this->lastIdentifier !== $lastIdentifier) {
             $io->section($section);
         }
 
-        $this->resolveSourceContext($context, $rows);
-        $this->resolveTypo3Context($context, $rows);
+        $rows = [
+            ...$rows,
+            ...$requestContext['rows'],
+            ...$this->resolveSourceContext($context),
+            ...$this->resolveTypo3Context($context),
+        ];
 
         $io->table([], $rows);
 
@@ -77,13 +87,14 @@ final class Typo3CliDescriptor implements DumpDescriptorInterface
     }
 
     /**
-     * @param array<string, mixed>        $context
-     * @param list<array{string, string}> $rows
+     * @param array<string, mixed> $context
+     *
+     * @return array{section: ?string, rows: list<array{string, string}>}
      */
-    private function resolveRequestContext(array $context, array &$rows, string &$section): void
+    private function resolveRequestContext(array $context): array
     {
         if (!isset($context['request']) || !is_array($context['request'])) {
-            return;
+            return ['section' => null, 'rows' => []];
         }
 
         $request = $context['request'];
@@ -93,36 +104,41 @@ final class Typo3CliDescriptor implements DumpDescriptorInterface
         $uri = is_string($request['uri'] ?? null) ? $request['uri'] : '';
         $section = sprintf('%s %s', $method, $uri);
 
+        $rows = [];
         $controller = $request['controller'] ?? null;
         if ($controller instanceof Data) {
             $dumpOutput = $this->dumper->dump($controller, true);
             $rows[] = ['controller', rtrim(is_string($dumpOutput) ? $dumpOutput : '', "\n")];
         }
+
+        return ['section' => $section, 'rows' => $rows];
     }
 
     /**
      * @param array<string, mixed> $context
      */
-    private function resolveCliContext(array $context, string &$section): void
+    private function resolveCliContext(array $context): ?string
     {
         if (isset($context['request']) || !isset($context['cli']) || !is_array($context['cli'])) {
-            return;
+            return null;
         }
 
         $cli = $context['cli'];
         $this->lastIdentifier = $cli['identifier'] ?? $this->lastIdentifier;
         $commandLine = is_string($cli['command_line'] ?? null) ? $cli['command_line'] : '';
-        $section = '$ '.$commandLine;
+
+        return '$ '.$commandLine;
     }
 
     /**
-     * @param array<string, mixed>        $context
-     * @param list<array{string, string}> $rows
+     * @param array<string, mixed> $context
+     *
+     * @return list<array{string, string}>
      */
-    private function resolveSourceContext(array $context, array &$rows): void
+    private function resolveSourceContext(array $context): array
     {
         if (!isset($context['source']) || !is_array($context['source'])) {
-            return;
+            return [];
         }
 
         /** @var array<string, mixed> $source */
@@ -136,28 +152,32 @@ final class Typo3CliDescriptor implements DumpDescriptorInterface
             $sourceInfo = sprintf('<href=%s>%s</>', $fileLink, $sourceInfo);
         }
 
-        $rows[] = ['source', $sourceInfo];
-
         $file = is_string($source['file_relative'] ?? null)
             ? $source['file_relative']
             : (is_string($source['file'] ?? null) ? $source['file'] : '-');
-        $rows[] = ['file', $file];
+
+        return [
+            ['source', $sourceInfo],
+            ['file', $file],
+        ];
     }
 
     /**
-     * @param array<string, mixed>        $context
-     * @param list<array{string, string}> $rows
+     * @param array<string, mixed> $context
+     *
+     * @return list<array{string, string}>
      */
-    private function resolveTypo3Context(array $context, array &$rows): void
+    private function resolveTypo3Context(array $context): array
     {
         if (!isset($context['typo3']) || !is_array($context['typo3'])) {
-            return;
+            return [];
         }
 
         $typo3 = $context['typo3'];
         $version = is_string($typo3['version'] ?? null) ? $typo3['version'] : '-';
         $appContext = is_string($typo3['context'] ?? null) ? $typo3['context'] : '-';
-        $rows[] = ['typo3', sprintf('%s (%s)', $version, $appContext)];
+
+        return [['typo3', sprintf('%s (%s)', $version, $appContext)]];
     }
 
     /**

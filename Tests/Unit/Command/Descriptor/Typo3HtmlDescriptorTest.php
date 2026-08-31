@@ -35,7 +35,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
     #[Test]
     public function implementsDumpDescriptorInterface(): void
     {
-        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper());
+        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), null);
 
         self::assertInstanceOf(DumpDescriptorInterface::class, $descriptor);
     }
@@ -43,7 +43,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsTypo3ContextAsBadge(): void
     {
-        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper());
+        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -66,7 +66,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
     #[Test]
     public function describeGeneratesIdeLinkWhenConfigured(): void
     {
-        $ideLinkGenerator = new IdeLinkGenerator('vscode');
+        $ideLinkGenerator = new IdeLinkGenerator('vscode', null, null);
         $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), $ideLinkGenerator);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
@@ -91,7 +91,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsSourceInfoWithoutIdeLink(): void
     {
-        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper());
+        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -192,7 +192,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
     #[Test]
     public function describeOnlyRendersStylesOnFirstCall(): void
     {
-        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper());
+        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), null);
         $output = new BufferedOutput();
         $data = (new VarCloner())->cloneVar('test');
         $context = ['timestamp' => microtime(true)];
@@ -259,7 +259,7 @@ final class Typo3HtmlDescriptorTest extends TestCase
      */
     private function describeWithContext(array $context): string
     {
-        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper());
+        $descriptor = new Typo3HtmlDescriptor(new HtmlDumper(), null);
         $output = new BufferedOutput();
         $data = (new VarCloner())->cloneVar('test');
 
