@@ -33,7 +33,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function implementsDumpDescriptorInterface(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
 
         self::assertInstanceOf(DumpDescriptorInterface::class, $descriptor);
     }
@@ -41,7 +41,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsSourceInfo(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -65,7 +65,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsTypo3Context(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -88,7 +88,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeRendersOutputWithIdeLinkGeneratorConfigured(): void
     {
-        $ideLinkGenerator = new IdeLinkGenerator('phpstorm');
+        $ideLinkGenerator = new IdeLinkGenerator('phpstorm', null, null);
         $descriptor = new Typo3CliDescriptor(new CliDumper(), $ideLinkGenerator);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
@@ -115,7 +115,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeDefaultsTimestampWhenMissing(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -129,7 +129,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsHttpRequestContextWithController(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -154,7 +154,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeOutputsCliContextWithoutRequest(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');
@@ -176,7 +176,7 @@ final class Typo3CliDescriptorTest extends TestCase
     #[Test]
     public function describeUsesFileRelativeOverFile(): void
     {
-        $descriptor = new Typo3CliDescriptor(new CliDumper());
+        $descriptor = new Typo3CliDescriptor(new CliDumper(), null);
         $output = new BufferedOutput();
         $cloner = new VarCloner();
         $data = $cloner->cloneVar('test');

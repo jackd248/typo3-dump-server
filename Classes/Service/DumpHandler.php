@@ -129,13 +129,19 @@ final class DumpHandler
             return false;
         }
 
-        $connection = @fsockopen(
-            $urlParts['host'],
-            $urlParts['port'],
-            $errno,
-            $errstr,
-            self::SERVER_CONNECTION_TIMEOUT,
-        );
+        set_error_handler(static fn (): bool => true);
+
+        try {
+            $connection = fsockopen(
+                $urlParts['host'],
+                $urlParts['port'],
+                $errno,
+                $errstr,
+                self::SERVER_CONNECTION_TIMEOUT,
+            );
+        } finally {
+            restore_error_handler();
+        }
 
         if (false !== $connection) {
             fclose($connection);

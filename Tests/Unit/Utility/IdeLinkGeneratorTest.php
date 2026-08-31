@@ -28,7 +28,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateReturnsPhpstormLink(): void
     {
-        $generator = new IdeLinkGenerator('phpstorm');
+        $generator = new IdeLinkGenerator('phpstorm', null, null);
 
         self::assertSame(
             'phpstorm://open?file=/var/www/html/test.php&line=42',
@@ -39,7 +39,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateReturnsVscodeLink(): void
     {
-        $generator = new IdeLinkGenerator('vscode');
+        $generator = new IdeLinkGenerator('vscode', null, null);
 
         self::assertSame(
             'vscode://file//var/www/html/test.php:42',
@@ -50,7 +50,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateReturnsSublimeLink(): void
     {
-        $generator = new IdeLinkGenerator('sublime');
+        $generator = new IdeLinkGenerator('sublime', null, null);
 
         self::assertSame(
             'subl://open?url=file:///var/www/html/test.php&line=42',
@@ -61,7 +61,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateReturnsTextmateLink(): void
     {
-        $generator = new IdeLinkGenerator('textmate');
+        $generator = new IdeLinkGenerator('textmate', null, null);
 
         self::assertSame(
             'txmt://open?url=file:///var/www/html/test.php&line=42',
@@ -72,7 +72,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateReturnsAtomLink(): void
     {
-        $generator = new IdeLinkGenerator('atom');
+        $generator = new IdeLinkGenerator('atom', null, null);
 
         self::assertSame(
             'atom://core/open/file?filename=/var/www/html/test.php&line=42',
@@ -83,7 +83,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateUsesCustomPatternWhenIdeIsUnknown(): void
     {
-        $generator = new IdeLinkGenerator('myide://open?file=%file%&line=%line%');
+        $generator = new IdeLinkGenerator('myide://open?file=%file%&line=%line%', null, null);
 
         self::assertSame(
             'myide://open?file=/var/www/html/test.php&line=42',
@@ -122,7 +122,7 @@ final class IdeLinkGeneratorTest extends TestCase
     #[Test]
     public function generateIgnoresPathMappingWhenNotConfigured(): void
     {
-        $generator = new IdeLinkGenerator('phpstorm');
+        $generator = new IdeLinkGenerator('phpstorm', null, null);
 
         self::assertSame(
             'phpstorm://open?file=/var/www/html/test.php&line=42',

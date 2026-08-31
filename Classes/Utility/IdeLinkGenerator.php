@@ -37,7 +37,7 @@ final readonly class IdeLinkGenerator
 
     private string $pattern;
 
-    public function __construct(string $ide, private ?string $pathFrom = null, private ?string $pathTo = null)
+    public function __construct(string $ide, private ?string $pathFrom, private ?string $pathTo)
     {
         $this->pattern = self::IDE_PATTERNS[$ide] ?? $ide;
     }

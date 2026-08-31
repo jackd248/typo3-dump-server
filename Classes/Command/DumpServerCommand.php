@@ -44,7 +44,7 @@ final class DumpServerCommand extends Command
     /**
      * @param array<string, DumpDescriptorInterface> $descriptors
      */
-    public function __construct(?string $name = null, array $descriptors = [])
+    public function __construct(?string $name, array $descriptors)
     {
         $ideLinkGenerator = $this->createIdeLinkGenerator();
 
